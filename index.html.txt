@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>心理年龄测试</title>
+<meta name="description" content="18 道题，测出此刻的心理年龄，并与实际年龄对照，附带六维度心理分析。">
+<meta name="theme-color" content="#0E1714">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230E1714'/%3E%3Cg fill='none' stroke='%238FB3A6' stroke-width='2'%3E%3Ccircle cx='32' cy='32' r='19'/%3E%3Ccircle cx='32' cy='32' r='11'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='3' fill='%238FB3A6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link rel="preconnect" href="https://sf3-scmcdn-cn.feishucdn.com" crossorigin>
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;500;600&amp;family=Noto+Sans+SC:wght@300;400;500&amp;display=swap">
+<style>
+/* ===== 基础 ===== */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+html,body{margin:0;padding:0}
+:root{
+  --ink:#101A17;
+  --ink-2:#33433D;
+  --ink-3:#6E7C76;
+  --paper:#F2F3F0;
+  --paper-2:#E3E6E0;
+  --card:#FAFAF8;
+  --jade:#2C6A58;
+  --jade-2:#8FB3A6;
+  --jade-3:#DBE6DF;
+  --dark:#0E1714;
+  --serif:"Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  --sans:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:15px;line-height:1.7;font-weight:300;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+input{font:inherit}
+img,svg{display:block}
+.grain{
+  position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='n'/%3E%3C/svg%3E");
+}
+
+/* ===== 视图切换 ===== */
+.view{display:none}
+.view.is-active{display:block;animation:viewIn .6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes viewIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== 封面 ===== */
+.cover{
+  position:relative;min-height:100svh;background:var(--dark);color:#EEF1ED;
+  display:flex;flex-direction:column;overflow:hidden;
+  padding:calc(26px + env(safe-area-inset-top)) 24px calc(22px + env(safe-area-inset-bottom));
+}
+.cover::before{
+  content:"";position:absolute;inset:-25%;pointer-events:none;
+  background:
+    radial-gradient(58% 42% at 84% 14%,rgba(143,179,166,.15),transparent 68%),
+    radial-gradient(52% 40% at 8% 84%,rgba(44,106,88,.20),transparent 70%);
+}
+.rings{
+  position:absolute;right:-32%;bottom:-14%;width:92vw;max-width:520px;
+  opacity:.34;pointer-events:none;
+}
+.rings circle{fill:none;stroke:var(--jade-2);stroke-width:1}
+.rings circle:nth-child(1){opacity:.55}
+.rings circle:nth-child(3){opacity:.4}
+.cover-inner{position:relative;display:flex;flex-direction:column;flex:1;width:100%;max-width:1080px;margin:0 auto;z-index:1}
+.cover-top{display:flex;align-items:center;gap:14px;font-size:11.5px;letter-spacing:.26em;color:rgba(238,241,237,.5)}
+.cover-top::after{content:"";flex:1;height:1px;background:rgba(238,241,237,.16)}
+.cover-hero{flex:1;display:flex;flex-direction:column;justify-content:center;padding:40px 0 34px}
+.cover h1{
+  margin:0;font-family:var(--serif);font-weight:500;
+  font-size:clamp(40px,12.6vw,72px);line-height:1.08;letter-spacing:.06em;
+}
+.cover .lede{
+  margin:24px 0 0;max-width:21em;font-size:14.5px;line-height:2;
+  color:rgba(238,241,237,.68);letter-spacing:.02em;
+}
+.cover-foot{width:100%}
+.age-block{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border-top:1px solid rgba(238,241,237,.16);border-bottom:1px solid rgba(238,241,237,.16);
+  padding:10px 0;
+}
+.age-label{font-size:12px;letter-spacing:.14em;color:rgba(238,241,237,.55);white-space:nowrap}
+.stepper{display:flex;align-items:center;gap:2px}
+.step{
+  width:44px;height:44px;display:grid;place-items:center;border-radius:2px;
+  border:1px solid rgba(238,241,237,.2);color:rgba(238,241,237,.75);font-size:15px;
+  transition:background .2s,border-color .2s;
+}
+.step:hover{background:rgba(238,241,237,.1);border-color:rgba(238,241,237,.4)}
+.step:active{background:rgba(238,241,237,.18)}
+#ageInput{
+  width:62px;text-align:center;background:none;border:0;outline:none;
+  color:#fff;font-family:var(--serif);font-size:28px;font-weight:400;
+  -moz-appearance:textfield;appearance:textfield;
+}
+#ageInput::-webkit-outer-spin-button,#ageInput::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+#ageInput:focus-visible{box-shadow:inset 0 -1px 0 var(--jade-2)}
+.unit{font-size:12px;color:rgba(238,241,237,.45);letter-spacing:.08em;margin-left:2px}
+.start{
+  display:block;width:100%;margin-top:18px;height:58px;border-radius:2px;
+  background:#EEF1ED;color:var(--dark);font-family:var(--serif);
+  font-size:16px;letter-spacing:.16em;
+  transition:background .25s,transform .25s;
+}
+.start:hover{background:#fff}
+.start:active{transform:translateY(1px)}
+.note{margin:13px 0 0;font-size:11px;line-height:1.8;color:rgba(238,241,237,.52);letter-spacing:.04em}
+
+/* ===== 答题 ===== */
+.quiz{
+  min-height:100svh;background:var(--paper);
+  padding:0 22px calc(22px + env(safe-area-inset-bottom));
+}
+.quiz-inner{max-width:720px;margin:0 auto}
+.quiz-top{
+  position:sticky;top:0;z-index:5;padding-top:calc(18px + env(safe-area-inset-top));padding-bottom:12px;
+  background:linear-gradient(var(--paper) 72%,rgba(242,243,240,0));
+}
+.ticks{display:flex;gap:3px}
+.tick{flex:1;height:2px;background:var(--paper-2);transition:background .35s}
+.tick.done{background:var(--jade-2)}
+.tick.now{background:var(--jade)}
+.count{margin-top:10px;display:flex;justify-content:space-between;font-size:11px;letter-spacing:.16em;color:var(--ink-3)}
+.count b{font-weight:400;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.qbody{display:flex;flex-direction:column;justify-content:center;min-height:calc(100svh - 210px);padding:6px 0 8px}
+.qnum{font-family:var(--serif);font-size:12.5px;color:var(--jade);letter-spacing:.2em}
+.qtext{
+  margin:16px 0 0;font-family:var(--serif);font-weight:500;
+  font-size:clamp(21px,5.9vw,27px);line-height:1.64;letter-spacing:.01em;
+}
+.opts{margin-top:26px;border-top:1px solid var(--paper-2)}
+.opt{
+  position:relative;display:flex;align-items:flex-start;gap:13px;width:100%;text-align:left;
+  padding:18px 2px;border-bottom:1px solid var(--paper-2);min-height:56px;
+}
+.opt>*{position:relative;z-index:1}
+.opt::before{
+  content:"";position:absolute;inset:0 -14px;background:var(--ink);opacity:0;
+  transition:opacity .18s ease;
+}
+.opt .k{
+  flex:none;width:15px;padding-top:3px;font-family:var(--serif);
+  font-size:12px;letter-spacing:.08em;color:var(--ink-3);transition:color .18s;
+}
+.opt .t{font-size:15.5px;line-height:1.68;color:var(--ink-2);transition:color .18s}
+.opt:hover .t{color:var(--ink)}
+.opt.sel::before{opacity:1}
+.opt.sel .k{color:var(--jade-2)}
+.opt.sel .t{color:#EEF1ED}
+.quiz-foot{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+.back{
+  font-size:12px;letter-spacing:.14em;color:var(--ink-3);padding:14px 2px;
+  transition:color .2s;
+}
+.back:hover{color:var(--ink)}
+.back:disabled{opacity:.25;cursor:default}
+.hint{font-size:11px;letter-spacing:.1em;color:#9BA6A0}
+
+/* ===== 结果 ===== */
+.result{padding:0 22px calc(36px + env(safe-area-inset-bottom));background:var(--paper)}
+.result-inner{max-width:760px;margin:0 auto}
+.res-top{
+  display:flex;align-items:center;gap:14px;padding-top:calc(20px + env(safe-area-inset-top));
+  font-size:11px;letter-spacing:.22em;color:var(--ink-3);
+}
+.res-top::after{content:"";flex:1;height:1px;background:var(--paper-2)}
+.rhero{padding:30px 0 0}
+.rlabel{font-family:var(--serif);font-size:12.5px;letter-spacing:.2em;color:var(--jade)}
+.bignum{display:flex;align-items:baseline;gap:9px;margin-top:6px}
+.bignum .n{
+  font-family:var(--serif);font-weight:500;line-height:.94;letter-spacing:-.02em;
+  font-size:clamp(74px,25vw,128px);font-variant-numeric:tabular-nums;
+}
+.bignum .u{font-size:13px;letter-spacing:.12em;color:var(--ink-3);padding-bottom:6px}
+.delta{margin-top:12px;font-size:14.8px;line-height:1.8;color:var(--ink-2);max-width:26em}
+.delta b{font-family:var(--serif);font-weight:500;font-size:17px;color:var(--jade);letter-spacing:.02em}
+
+/* 年龄对照轴 */
+.axis{position:relative;margin-top:26px;padding:42px 0 42px}
+.axis-track{position:relative;height:1px;background:var(--paper-2)}
+.axis-band{position:absolute;top:-1px;height:3px;background:var(--jade-3)}
+.axis-end{position:absolute;top:9px;font-size:10px;letter-spacing:.08em;color:#A2ACA6;transform:translateX(-50%)}
+.axis-end.l{transform:none;left:0}
+.axis-end.r{transform:none;right:0}
+.mark{position:absolute;top:0;transform:translate(-50%,-50%)}
+.mark .dot{width:11px;height:11px;border-radius:50%;margin:0 auto}
+.mark.actual .dot{background:transparent;border:1.5px solid var(--ink)}
+.mark.psych .dot{background:var(--jade);border:1.5px solid var(--jade)}
+.mark .tag{
+  position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-size:10.5px;letter-spacing:.08em;line-height:1;
+}
+.mark.psych .tag{bottom:15px;color:var(--jade)}
+.mark.actual .tag{top:15px;color:var(--ink-3)}
+
+/* 段落 */
+.sec{margin-top:42px;padding-top:20px;border-top:1px solid var(--paper-2)}
+.sec h2{
+  margin:0 0 16px;font-family:var(--serif);font-weight:500;
+  font-size:17px;letter-spacing:.1em;display:flex;align-items:center;gap:10px;
+}
+.sec h2::before{content:"";width:3px;height:14px;background:var(--jade-3);display:inline-block}
+.prose p{margin:0 0 15px;font-size:14.8px;line-height:2;color:var(--ink-2);letter-spacing:.01em}
+.prose p.lead{font-size:15.6px;color:var(--ink);line-height:1.95}
+.prose p:last-child{margin-bottom:0}
+.prose b{font-family:var(--serif);font-weight:500;color:var(--ink);letter-spacing:.02em}
+
+/* 雷达 */
+.radar-wrap{margin:2px -8px 0;height:318px}
+.radar-cap{margin-top:2px;font-size:11.5px;line-height:1.8;color:#78847E;letter-spacing:.02em}
+
+/* 维度 */
+.dims{margin-top:22px}
+.dim{padding:16px 0;border-top:1px solid var(--paper-2)}
+.dim:last-child{border-bottom:1px solid var(--paper-2)}
+.dim-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.dim-name{font-family:var(--serif);font-size:15.5px;font-weight:400;letter-spacing:.05em}
+.dim-tag{
+  font-size:10px;letter-spacing:.12em;color:var(--jade);
+  border:1px solid var(--jade-3);padding:1px 5px;margin-left:7px;white-space:nowrap;
+}
+.dim-val{font-size:11.5px;letter-spacing:.06em;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.bar{position:relative;height:2px;background:var(--paper-2);margin:11px 0 11px}
+.bar i{position:absolute;left:0;top:0;height:2px;width:0;background:var(--jade);transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+.dim-note{margin:0;font-size:13.6px;line-height:1.88;color:#5B6863}
+
+/* 建议 */
+.acts{display:grid;gap:20px}
+.act{display:grid;grid-template-columns:24px 1fr;gap:10px}
+.act .n{font-family:var(--serif);font-size:11.5px;color:var(--jade);padding-top:2px;letter-spacing:.08em}
+.act h3{margin:0;font-family:var(--serif);font-size:15.5px;font-weight:500;letter-spacing:.04em}
+.act p{margin:7px 0 0;font-size:13.6px;line-height:1.9;color:var(--ink-3)}
+
+/* 结语 */
+.closing{
+  margin-top:40px;font-family:var(--serif);font-size:15.5px;line-height:2.1;
+  color:var(--ink-2);letter-spacing:.02em;text-indent:2em;
+}
+.closing .mark-q{color:var(--jade-2);font-size:19px;margin-right:2px}
+
+/* 结果页脚 */
+.res-foot{margin-top:36px;padding-top:22px;border-top:1px solid var(--paper-2);display:flex;flex-direction:column;gap:16px}
+.cmps{display:grid;gap:12px}
+.cmp-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:12px;letter-spacing:.06em}
+.cmp-head span:last-child{color:var(--ink-3);font-variant-numeric:tabular-nums}
+.restart{
+  height:52px;border:1px solid var(--ink);border-radius:2px;
+  font-family:var(--serif);font-size:14.5px;letter-spacing:.14em;
+  transition:background .25s,color .25s;
+}
+.restart:hover{background:var(--ink);color:var(--paper)}
+.disclaim{margin:0;font-size:11.5px;line-height:1.85;color:#77837D;letter-spacing:.02em}
+
+/* ===== 桌面端 ===== */
+@media (min-width:768px){
+  .cover{padding:44px 6vw 34px}
+  .cover-hero{flex-direction:row;align-items:flex-end;justify-content:space-between;gap:48px}
+  .cover h1{font-size:72px}
+  .cover .lede{margin:0 0 8px;font-size:14.5px;max-width:24em}
+  .rings{right:-14%;bottom:-22%;width:44vw;max-width:580px}
+  .cover-foot{max-width:520px}
+  .quiz{padding:0 40px}
+  .qbody{min-height:calc(100svh - 220px)}
+  .result{padding:0 40px}
+  .rhero{padding-top:38px}
+  .radar-wrap{height:380px}
+  .res-foot{flex-direction:row;align-items:center;justify-content:space-between}
+  .restart{width:240px;flex:none}
+  .disclaim{max-width:380px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
+  .view.is-active{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ===== 视图：封面 ===== -->
+<section class="view view--cover is-active" id="cover" aria-label="封面">
+  <div class="cover">
+    <svg class="rings" viewBox="0 0 320 320" aria-hidden="true">
+      <circle cx="160" cy="160" r="34"/>
+      <circle cx="160" cy="160" r="70"/>
+      <circle cx="160" cy="160" r="106"/>
+      <circle cx="160" cy="160" r="142"/>
+      <circle cx="160" cy="160" r="158"/>
+    </svg>
+    <div class="cover-inner">
+      <div class="cover-top">心理年龄指数</div>
+      <div class="cover-hero">
+        <div>
+          <h1>心理年龄测试</h1>
+          <p class="lede">年岁记在身份证上，也记在你遇事时的第一反应里。18 道题，看看此刻的你，心理年龄停在哪儿。</p>
+        </div>
+      </div>
+      <div class="cover-foot">
+        <div class="age-block">
+          <span class="age-label">你的实际年龄</span>
+          <div class="stepper">
+            <button class="step" type="button" data-step="-1" aria-label="年龄减一">−</button>
+            <input id="ageInput" type="number" inputmode="numeric" min="10" max="80" value="28" aria-label="输入你的实际年龄">
+            <button class="step" type="button" data-step="1" aria-label="年龄加一">＋</button>
+            <span class="unit">岁</span>
+          </div>
+        </div>
+        <button class="start" id="startBtn" type="button">开始测试</button>
+        <p class="note">共 18 道题，没有标准答案，凭第一反应作答即可。结果用于自我了解，不作临床诊断依据。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 视图：答题 ===== -->
+<section class="view view--quiz" id="quiz" aria-label="答题">
+  <div class="quiz">
+    <div class="quiz-inner">
+      <div class="quiz-top">
+        <div class="ticks" id="ticks" aria-hidden="true"></div>
+        <div class="count"><span><b id="qNow">01</b> / 18</span><span id="qDim">剩余 17 题</span></div>
+      </div>
+      <div class="qbody">
+        <div class="qnum" id="qNum">第 01 题</div>
+        <h2 class="qtext" id="qText"></h2>
+        <div class="opts" id="opts"></div>
+      </div>
+      <div class="quiz-foot">
+        <button class="back" id="backBtn" type="button">上一题</button>
+        <span class="hint">凭第一反应选择</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 视图：结果 ===== -->
+<section class="view view--result" id="result" aria-label="测试结果">
+  <div class="result">
+    <div class="result-inner" id="resultInner">
+      <!-- 结果内容由 JS 渲染 -->
+    </div>
+  </div>
+</section>
+
+<script src="https://fastly.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js" defer></script>
+<script>
+(function(){
+'use strict';
+
+/* ================= 六维度 ================= */
+var DIMS = {
+  emo:{
+    name:'情绪成熟度', short:'情绪',
+    high:'情绪来了，你能看见它，也能等它过去。你不太容易被一句话推着走，事后也很少为当时的反应后悔。这种稳定不是冷淡，而是你知道情绪需要时间。',
+    mid:'你大多时候稳得住，但在被误解或被否定的时候，仍会先被情绪带走一段。你的恢复速度不慢，只是那个“先炸一下”的瞬间还会替你说话。',
+    low:'你的反应常常比想法快一步。情绪来得直接，也让身边的人容易跟着紧张。这不是缺点，它说明你感受力强，只是还没学会在感觉和回应之间留一段空白。'
+  },
+  cog:{
+    name:'认知开放性', short:'认知',
+    high:'你能让一个和自己相反的说法在脑子里待一会儿，不急着判对错。对自己不熟悉的领域，你愿意从零开始。这种弹性会让人和你聊天时觉得不累。',
+    mid:'你愿意听新的东西，但前提是它不推翻你已经相信的部分。遇到真正陌生的领域，你会先观察一阵再靠近，谨慎多过好奇。',
+    low:'你更信任已经被验证过的经验。新的说法、陌生的工具，都要先证明自己值得，你才愿意花时间。这让你少走弯路，也可能错过一些正在发生的变化。'
+  },
+  rel:{
+    name:'关系模式', short:'关系',
+    high:'你能陪别人待在情绪里，也知道自己到哪一步该停。亲近和独立在你身上不冲突，你既不太会消耗别人，也不太会把自己耗空。',
+    mid:'你在关系里是可靠的，但常常用委屈自己来换和平。你会先照顾对方的感受，再回头处理自己的那部分，有时就处理不完了。',
+    low:'你需要关系里的确定感，对方的语气、回不回消息，都会影响你一天的状态。你的投入是真的，只是把太多重量放在了别人身上。'
+  },
+  self:{
+    name:'自我认知', short:'自我',
+    high:'你能说清自己为什么这么选，也能承认当时的局限。回头看过去，你看到的是因果，不只是对错。这种清楚，让下一次的决定更轻。',
+    mid:'你对自己的判断大体是准的，只是在被指出问题的时候，仍会先有一层防御。你愿意承认，只是需要一点时间和台阶。',
+    low:'你更愿意把决定交给感觉，或交给别人。被评价的时候，第一反应是保护自己。这让你避开了一些冲击，也让一些经验没能留下来。'
+  },
+  rhythm:{
+    name:'生活节律', short:'节律',
+    high:'你的日子有骨架：什么时候睡、钱花在哪、长期的事推进到哪一步，心里都有数。偶尔乱一次，你也能自己收回来。',
+    mid:'你有基本的秩序，但常常在补前一天的账。你想规律，也确实在努力，只是每次都要靠意志力重新开始。',
+    low:'你跟着感觉走，时间和钱都容易在下滑的时候才发现。这不是懒，是你还没找到一种能长期跑下去的节奏。'
+  },
+  vigor:{
+    name:'生命活力', short:'活力',
+    high:'你会照顾身体，也愿意为一件没做过的事走出第一步。你的精力是可持续的，不是靠一口气撑出来的。',
+    mid:'你有想做的事，但常常停在“想清楚再说”。身体上你知道该动一动，忙起来又顾不上。',
+    low:'你的精力大多花在应付眼前，剩下的一点用来恢复。新机会来了，你第一反应是风险，而不是可能。'
+  }
+};
+var ORDER = ['emo','cog','rel','self','rhythm','vigor'];
+
+/* ================= 十八道题 ================= */
+/* opts: [选项文本, 成熟度分值 1-4] */
+var QUESTIONS = [
+  {dim:'emo', q:'当你被人误解时，你的第一反应更接近——', opts:[
+    ['觉得委屈，忍不住马上把话顶回去',1],
+    ['心里压着火，之后反复回想那几句话',2],
+    ['干脆不解释了，清者自清',3],
+    ['先弄清对方为什么这样理解，再决定要不要解释',4]
+  ]},
+  {dim:'emo', q:'早就计划好的周末被临时打乱，你会——', opts:[
+    ['一整天都提不起劲，心里别扭',1],
+    ['抱怨几句，然后随便找点事打发过去',2],
+    ['重新排一遍，让剩下的时间也不浪费',3],
+    ['先保住最想做的那件事，其余顺其自然',4]
+  ]},
+  {dim:'emo', q:'情绪低落的夜里，你通常怎么处理——', opts:[
+    ['刷手机到很晚，让别的信息把感觉盖住',1],
+    ['找人说说，说到对方也不知道怎么接',2],
+    ['告诉自己明天就好了，翻个身睡',3],
+    ['写几句，或者出去走一圈，等它过去',4]
+  ]},
+  {dim:'cog', q:'听到一个和你完全相反的观点，你先想到的是——', opts:[
+    ['他大概没搞清楚情况',1],
+    ['争论到最后，还是觉得自己对',2],
+    ['听完，回去再想想有没有道理',3],
+    ['他能这么说，一定有我没看到的经历',4]
+  ]},
+  {dim:'cog', q:'面对一个你完全不懂的新领域——', opts:[
+    ['先放着，等它变成必须会的再说',1],
+    ['让懂的人教一遍，能应付就行',2],
+    ['先看看资料，弄明白它好在哪',3],
+    ['自己边试边查，摔几次也没关系',4]
+  ]},
+  {dim:'cog', q:'面对一件看不清结果的事——', opts:[
+    ['尽量避开，没把握的事让人不安',1],
+    ['要有人陪着、有人兜底才敢动',2],
+    ['走一步看一步，反正情况会变',3],
+    ['先接受它就是不确定的，再决定走不走',4]
+  ]},
+  {dim:'rel', q:'朋友深夜跟你讲他的难处——', opts:[
+    ['有点慌，不知道说什么才合适',1],
+    ['忍不住替他着急，顺手替他安排下一步',2],
+    ['听，但也会提醒自己别被卷进去',3],
+    ['先陪他把情绪讲完，再谈怎么办',4]
+  ]},
+  {dim:'rel', q:'和亲近的人起了冲突——', opts:[
+    ['当场说清楚，谁对谁错要有个结论',1],
+    ['先退一步，把不舒服留给自己',2],
+    ['就事论事解决眼前的问题，情绪以后再说',3],
+    ['先停下来，等彼此都缓过来再谈',4]
+  ]},
+  {dim:'rel', q:'关于一个人待着——', opts:[
+    ['待久了会慌，得找人说话才踏实',1],
+    ['可以独处，但一有空就想刷点什么填空',2],
+    ['看情况，忙时想独处，闲时想有人在',3],
+    ['独处是必要的，也不急着找人',4]
+  ]},
+  {dim:'self', q:'做重要决定时，你更依靠——', opts:[
+    ['当时的感觉，事后再补一个理由',1],
+    ['别人的意见，尤其比你懂行的人',2],
+    ['列清单、算利弊，最后仍看直觉',3],
+    ['先把最坏的结果想清楚，再决定',4]
+  ]},
+  {dim:'self', q:'别人指出你的问题时——', opts:[
+    ['第一反应是防御，觉得对方不了解你',1],
+    ['表面接受，心里过不去',2],
+    ['承认，但会解释为什么会这样',3],
+    ['先分辨有没有道理，有就认',4]
+  ]},
+  {dim:'self', q:'回头看几年前的自己——', opts:[
+    ['不太想回看，那时太幼稚了',1],
+    ['觉得那时候的自己更快乐',2],
+    ['有遗憾，也承认那时已经尽力',3],
+    ['能看出当初的选择是从哪来的',4]
+  ]},
+  {dim:'rhythm', q:'你的作息——', opts:[
+    ['基本跟着感觉走，困了才睡',1],
+    ['想早睡，但每天都在补前一天的账',2],
+    ['大体规律，周末会松一点',3],
+    ['有固定节奏，偶尔破一次也不慌',4]
+  ]},
+  {dim:'rhythm', q:'关于花钱——', opts:[
+    ['喜欢就买，月底再说',1],
+    ['会有冲动消费，之后有点后悔',2],
+    ['有大致的账，知道钱都去了哪',4],
+    ['会攒，但对未来没什么具体安排',3]
+  ]},
+  {dim:'rhythm', q:'对一件要三年才见效的事——', opts:[
+    ['很难坚持，看不到反馈就放弃',1],
+    ['断断续续，靠热情推着走',2],
+    ['心里记着，有机会就推进一点',3],
+    ['拆成小段，按时间往下走',4]
+  ]},
+  {dim:'vigor', q:'一个完全空白的周末——', opts:[
+    ['睡到中午，剩下的时间刷手机',1],
+    ['临时约人，看谁有空',2],
+    ['一般有点安排，也会留白',3],
+    ['会去做一件一直想做的事',4]
+  ]},
+  {dim:'vigor', q:'一个没做过的机会摆在面前，风险不小——', opts:[
+    ['直接算了，不做没把握的事',1],
+    ['想很久，最后还是没动',2],
+    ['先试一小步，见势再说',3],
+    ['先想清楚最坏的情况，能承担就去',4]
+  ]},
+  {dim:'vigor', q:'关于身体和精力——', opts:[
+    ['熬夜、外卖、久坐，反正还撑得住',1],
+    ['知道不该这样，但一直改不了',2],
+    ['忙起来顾不上，闲下来才补',3],
+    ['有运动或休息的习惯，不太硬撑',4]
+  ]}
+];
+
+/* ================= 状态 ================= */
+var state = { age:28, i:0, answers:new Array(18).fill(null), pick:new Array(18).fill(null), psych:0, dimPct:{}, locked:false };
+
+var $ = function(id){ return document.getElementById(id); };
+var pad = function(n){ return String(n).padStart(2,'0'); };
+var byId = {
+  cover:$('cover'), quiz:$('quiz'), result:$('result')
+};
+
+/* ================= 视图 ================= */
+function showView(name){
+  ['cover','quiz','result'].forEach(function(k){
+    byId[k].classList.toggle('is-active', k===name);
+  });
+  window.scrollTo(0,0);
+}
+
+/* ================= 封面交互 ================= */
+(function initCover(){
+  var input = $('ageInput');
+  Array.prototype.forEach.call(document.querySelectorAll('.step'), function(btn){
+    btn.addEventListener('click', function(){
+      var v = parseInt(input.value,10);
+      if(isNaN(v)) v = 28;
+      v += parseInt(btn.dataset.step,10);
+      v = Math.min(80, Math.max(10, v));
+      input.value = v;
+    });
+  });
+  input.addEventListener('blur', function(){
+    var v = parseInt(input.value,10);
+    if(isNaN(v)) v = 28;
+    input.value = Math.min(80, Math.max(10, v));
+  });
+})();
+
+$('startBtn').addEventListener('click', function(){
+  var v = parseInt($('ageInput').value,10);
+  if(isNaN(v)) v = 28;
+  state.age = Math.min(80, Math.max(10, v));
+  $('ageInput').value = state.age;
+  state.i = 0;
+  state.answers = new Array(18).fill(null);
+  state.pick = new Array(18).fill(null);
+  state.locked = false;
+  buildTicks();
+  renderQuestion();
+  showView('quiz');
+});
+
+/* ================= 答题 ================= */
+function buildTicks(){
+  var box = $('ticks');
+  if(box.childElementCount === 18) return;
+  box.innerHTML = '';
+  for(var n=0;n<18;n++){
+    var d = document.createElement('div');
+    d.className = 'tick';
+    box.appendChild(d);
+  }
+}
+function paintTicks(){
+  var ticks = $('ticks').children;
+  for(var n=0;n<18;n++){
+    var t = ticks[n];
+    t.className = 'tick' + (n===state.i ? ' now' : (state.answers[n]!==null ? ' done' : ''));
+  }
+}
+function renderQuestion(){
+  var q = QUESTIONS[state.i];
+  $('qNum').textContent = '第 ' + pad(state.i+1) + ' 题';
+  $('qNow').textContent = pad(state.i+1);
+  $('qDim').textContent = state.i === 17 ? '最后一题' : '剩余 ' + (17 - state.i) + ' 题';
+  $('qText').textContent = q.q;
+  var box = $('opts');
+  box.innerHTML = '';
+  q.opts.forEach(function(o, idx){
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'opt' + (state.pick[state.i] === idx ? ' sel' : '');
+    btn.setAttribute('aria-pressed', 'false');
+    btn.innerHTML = '<span class="k">' + 'ABCD'[idx] + '</span><span class="t"></span>';
+    btn.querySelector('.t').textContent = o[0];
+    btn.addEventListener('click', function(){ choose(idx); });
+    box.appendChild(btn);
+  });
+  $('backBtn').disabled = (state.i === 0);
+  state.locked = false;
+  paintTicks();
+}
+function choose(idx){
+  if(state.locked) return;
+  var q = QUESTIONS[state.i];
+  state.locked = true;
+  state.answers[state.i] = q.opts[idx][1];
+  state.pick[state.i] = idx;
+  var all = $('opts').children;
+  Array.prototype.forEach.call(all, function(el){
+    var on = el === all[idx];
+    el.classList.toggle('sel', on);
+    el.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  paintTicks();
+  setTimeout(function(){
+    if(state.i === 17){ finish(); }
+    else { state.i++; renderQuestion(); }
+  }, 230);
+}
+$('backBtn').addEventListener('click', function(){
+  if(state.i === 0) return;
+  state.i--;
+  renderQuestion();
+});
+window.addEventListener('keydown', function(e){
+  if(!byId.quiz.classList.contains('is-active')) return;
+  var idx = ['1','2','3','4'].indexOf(e.key);
+  if(idx < 0) idx = ['a','b','c','d'].indexOf(e.key.toLowerCase());
+  if(idx >= 0){ choose(idx); }
+  if(e.key === 'ArrowLeft'){ $('backBtn').click(); }
+});
+
+/* ================= 计算 ================= */
+function finish(){
+  var total = 0;
+  state.answers.forEach(function(v){ total += v; });
+  // 作答倾向（14–50 岁区间）与实际年龄轻度合成，使结果落在合理区间
+  var raw = 14 + (total - 18) * 0.68;
+  state.psych = Math.round(raw * 0.7 + state.age * 0.3);
+  ORDER.forEach(function(k){
+    var s = 0;
+    QUESTIONS.forEach(function(q, i){ if(q.dim === k) s += state.answers[i]; });
+    state.dimPct[k] = Math.round((s - 3) / 9 * 100);
+    state.dimPct[k] = Math.max(0, Math.min(100, state.dimPct[k]));
+  });
+  showView('result');
+  renderResult();
+}
+function bandOf(p){ return p >= 72 ? 'high' : (p >= 44 ? 'mid' : 'low'); }
+function bandLabel(p){ return p >= 72 ? '偏强' : (p >= 44 ? '平衡' : '偏弱'); }
+
+/* ================= 判读文案 ================= */
+function verdict(d, pa, age){
+  var abs = Math.abs(d);
+  if(d <= -8){
+    return {
+      title:'你的心理年龄比实际年龄小了不少',
+      p1:'你的心理年龄落在 ' + pa + ' 岁左右，比实际年龄年轻了 ' + abs + ' 岁。这不是“幼稚”，更像是你身上还留着一些没被生活磨掉的弹性：你仍会为一件小事高兴，仍愿意相信事情会变好，也还没把自己完全交给“应该”。',
+      p2:'年轻感的代价，通常出现在需要长期承担的事情上：你会本能地绕开看不到即时反馈的选择，在真正的压力面前，反应也比预想的更直接。你需要的不是变老，而是给自己加一点结构——固定的作息、一个能坚持的小目标、一个愿意听你把话说完的人。'
+    };
+  }
+  if(d <= -3){
+    return {
+      title:'你比实际年龄略轻一些',
+      p1:'心理年龄 ' + pa + ' 岁，比实际年龄轻 ' + abs + ' 岁。整体上你保留着不错的感受力和好奇心，遇事愿意先从“我想怎样”出发，而不是一开口就是“应该怎样”。',
+      p2:'你偶尔会被情绪带着走一段，或者在长期的事情上需要一点外力推着。这不影响你过日子，只是提醒你：成熟不是把感受关掉，而是学会在感受之后，仍然把事做完。'
+    };
+  }
+  if(d < 3){
+    return {
+      title:'心理年龄与实际年龄基本同步',
+      p1:'心理年龄 ' + pa + ' 岁，和你的实际年龄几乎重合。你承担得起这个年纪该承担的事，也没有把自己压缩成一个只剩责任的人，这种匹配本身是难得的。',
+      p2:'同步不等于没有空间。往下看六个维度，你会在某几个方向上明显偏强、某几个方向偏弱——真正的差别不在总分，而在结构。'
+    };
+  }
+  if(d < 8){
+    return {
+      title:'你比同龄人成熟一些',
+      p1:'心理年龄 ' + pa + ' 岁，比实际年龄大 ' + abs + ' 岁。你处理事情的方式偏稳：先想后果，再动；情绪上来时，会先压一压。身边的人大概会觉得你“靠得住”。',
+      p2:'稳的另一面是慢。你可能已经很久没有为一件事纯粹地兴奋过，也很少允许自己做些“没用”的事。成熟如果只剩下克制，就会慢慢变成消耗——留一点不划算的时间给自己。'
+    };
+  }
+  return {
+    title:'你的心理年龄明显大于实际年龄',
+    p1:'心理年龄 ' + pa + ' 岁，比实际年龄大 ' + abs + ' 岁。你大概很早就学会了替自己、也替别人兜住事情：情绪自己消化，问题自己解决，不太等别人来。',
+    p2:'这种早熟通常是换来的，可能是一段必须自己扛过去的时期。它让你可靠，也让你很少有地方可以松。你不需要变得幼稚，只需要允许自己在少数人面前不必成熟。'
+  };
+}
+
+/* ================= 建议 ================= */
+var TIPS = {
+  emo:{ t:'给情绪留十秒', d:'下一次被触发时，先不回消息、不接话，给自己十秒。你会发现大部分想说的话，十秒后不必说了，剩下那几句才是真的。' },
+  cog:{ t:'每月读一个你不认同的观点', d:'找一篇你本能想反驳的文章，完整读完，再写一句“它可能对在哪”。认知的弹性是这样一点点练出来的，不是靠读更多同类的书。' },
+  rel:{ t:'练习一次把自己的需要说出口', d:'在下一次让步之前，先说一句“我其实想……”。关系里最难的不是体谅，而是让对方知道你在哪儿，否则你们会越走越远却都不知情。' },
+  self:{ t:'给一个重要决定写半页理由', d:'写下你为什么这么选、最坏会怎样、你接不接受。半年后回看，你会比现在更了解自己，也更容易在下一次判断里少绕一圈。' },
+  rhythm:{ t:'先固定一件事', d:'不必改造全部生活，只固定一件：起床时间，或每周三次运动。秩序是从一个点长出来的，不是靠一次下定决心。' },
+  vigor:{ t:'每周安排一次“没用”的活动', d:'不带目的，不为健康也不为效率，只做一件你当下想做的事。精力是需要被补充的，光靠管理只会越来越薄。' }
+};
+function generalTip(d){
+  if(d <= -3){
+    return { t:'给未来三年写一个具体的句子', d:'不用宏大，具体到“三年后我希望某个周二的晚上在做什么”，再倒推出一件今年就能开始的小事。方向感比毅力更能撑住长期的事。' };
+  }
+  if(d >= 3){
+    return { t:'允许自己求助一次', d:'挑一件你本来打算自己扛完的事，把其中一部分交给别人。可靠的人也需要被接住，这不是失职。' };
+  }
+  return { t:'每年做一次重新对表', d:'挑一个固定的日子，回看这一年自己的反应方式有没有变。心理年龄本来就会浮动，知道自己漂到了哪，比记住一个分数重要。' };
+}
+
+/* ================= 结果渲染 ================= */
+function renderResult(){
+  var pa = state.psych, age = state.age, d = pa - age;
+  var v = verdict(d, pa, age);
+  var dims = ORDER.map(function(k){
+    return { k:k, name:DIMS[k].name, short:DIMS[k].short, pct:state.dimPct[k], band:bandOf(state.dimPct[k]) };
+  });
+  var sorted = dims.slice().sort(function(a,b){ return b.pct - a.pct; });
+  var top = sorted[0], low = sorted[sorted.length-1];
+  var tips = [TIPS[low.k], TIPS[sorted[sorted.length-2].k], generalTip(d)];
+
+  var deltaHtml;
+  if(d === 0){
+    deltaHtml = '你的心理年龄 <b>与实际年龄一致</b>，状态与年岁刚好对上。';
+  }else if(d > 0){
+    deltaHtml = '比实际年龄 <b>成熟 ' + d + ' 岁</b>　实际 ' + age + ' 岁';
+  }else{
+    deltaHtml = '比实际年龄 <b>年轻 ' + Math.abs(d) + ' 岁</b>　实际 ' + age + ' 岁';
+  }
+
+  var axis = axisHtml(age, pa);
+
+  var html = '' +
+  '<div class="res-top">测试结果</div>' +
+  '<div class="rhero">' +
+    '<div class="rlabel">你的心理年龄</div>' +
+    '<div class="bignum"><span class="n" id="bigNum">0</span><span class="u">岁</span></div>' +
+    '<p class="delta">' + deltaHtml + '</p>' +
+  '</div>' +
+  axis +
+  '<div class="sec"><h2>判读</h2><div class="prose">' +
+    '<p class="lead">' + v.title + '。' + v.p1 + '</p>' +
+    '<p>' + v.p2 + '</p>' +
+    '<p>六个维度里，你的 <b>' + top.name + '</b> 最强（' + top.pct + ' 分），<b>' + low.name + '</b> 相对最弱（' + low.pct + ' 分）。分数不是排名，它更像一张轮廓图：前者是你的底盘，后者是这次最值得看一眼的地方。</p>' +
+  '</div></div>' +
+  '<div class="sec"><h2>你的心理结构</h2>' +
+    '<div class="radar-wrap" id="radar" aria-label="六维度雷达图"></div>' +
+    '<p class="radar-cap">六项分别是情绪、认知、关系、自我、节律、活力。轮廓的凹凸比面积更有信息：越靠外，这一维度越稳。</p>' +
+    '<div class="dims">' +
+      dims.map(function(x){
+        return '<div class="dim">' +
+          '<div class="dim-head"><div class="dim-name">' + x.name + '<span class="dim-tag">' + bandLabel(x.pct) + '</span></div>' +
+          '<div class="dim-val">' + x.pct + ' / 100</div></div>' +
+          '<div class="bar"><i data-w="' + x.pct + '"></i></div>' +
+          '<p class="dim-note">' + DIMS[x.k][x.band] + '</p>' +
+        '</div>';
+      }).join('') +
+    '</div>' +
+  '</div>' +
+  '<div class="sec"><h2>接下来可以做的三件事</h2><div class="acts">' +
+    tips.map(function(t, i){
+      return '<div class="act"><div class="n">' + pad(i+1) + '</div><div><h3>' + t.t + '</h3><p>' + t.d + '</p></div></div>';
+    }).join('') +
+  '</div></div>' +
+  '<div class="closing"><span class="mark-q">「</span>心理年龄不是一个分数，是一种此刻的状态。它会被你正在经历的事推着上下浮动：被生活追着跑的时候偏大，被喜欢的事托着的时候偏小。今天的结果只说明现在的你，不说明你会一直是这样。</div>' +
+  '<div class="res-foot">' +
+    '<div class="cmps"><div class="cmp-head"><span>心理年龄</span><span>' + pa + ' 岁</span></div>' +
+    '<div class="cmp-head"><span>实际年龄</span><span>' + age + ' 岁</span></div>' +
+    '<div class="cmp-head"><span>差值</span><span>' + (d > 0 ? '+' : '') + d + ' 岁</span></div></div>' +
+    '<button class="restart" id="restartBtn" type="button">重新测试</button>' +
+  '</div>' +
+  '<p class="disclaim" style="margin-top:18px">计分方式：18 题的作答倾向合成一个基础分后，与你的实际年龄按 7 : 3 加权，因此结果反映的是相对你所在年龄阶段的心理状态。本测试是一份用于自我探索的趣味量表，不构成临床心理评估、诊断或治疗建议。若你正被持续的困扰影响生活，请寻求专业心理服务。</p>';
+
+  $('resultInner').innerHTML = html;
+
+  // 数字滚动
+  var big = $('bigNum');
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    big.textContent = pa;
+  }else{
+    var t0 = performance.now(), dur = 1100;
+    (function step(t){
+      var k = Math.min(1, (t - t0) / dur);
+      var e = 1 - Math.pow(1 - k, 3);
+      big.textContent = Math.round(pa * e);
+      if(k < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+
+  // 维度条
+  setTimeout(function(){
+    Array.prototype.forEach.call(document.querySelectorAll('.bar i'), function(el){
+      el.style.width = el.getAttribute('data-w') + '%';
+    });
+  }, 80);
+
+  drawRadar(dims);
+
+  var rb = $('restartBtn');
+  if(rb) rb.addEventListener('click', function(){
+    state.i = 0;
+    state.answers = new Array(18).fill(null);
+    state.pick = new Array(18).fill(null);
+    state.locked = false;
+    showView('cover');
+  });
+}
+
+/* 年龄对照轴 */
+function axisHtml(age, pa){
+  var lo = Math.floor((Math.min(age, pa) - 7) / 5) * 5;
+  var hi = Math.ceil((Math.max(age, pa) + 7) / 5) * 5;
+  if(hi - lo < 20){ hi = lo + 20; }
+  var pAge = (age - lo) / (hi - lo) * 100;
+  var pPa = (pa - lo) / (hi - lo) * 100;
+  var left = Math.min(pAge, pPa), width = Math.abs(pAge - pPa);
+  return '<div class="axis">' +
+    '<div class="axis-track">' +
+      '<div class="axis-band" style="left:' + left.toFixed(1) + '%;width:' + width.toFixed(1) + '%"></div>' +
+      '<div class="mark actual" style="left:' + pAge.toFixed(1) + '%"><span class="tag">实际 ' + age + '</span><span class="dot"></span></div>' +
+      '<div class="mark psych" style="left:' + pPa.toFixed(1) + '%"><span class="dot"></span><span class="tag">心理 ' + pa + '</span></div>' +
+      '<span class="axis-end l">' + lo + ' 岁</span>' +
+      '<span class="axis-end r">' + hi + ' 岁</span>' +
+    '</div>' +
+  '</div>';
+}
+
+/* ================= 雷达图 ================= */
+function drawRadar(dims){
+  var el = $('radar');
+  if(!el) return;
+  if(typeof echarts === 'undefined'){
+    var tries = 0;
+    (function wait(){
+      if(typeof echarts !== 'undefined'){ paint(); return; }
+      if(++tries > 40){ el.style.display = 'none'; return; }
+      setTimeout(wait, 150);
+    })();
+    return;
+  }
+  paint();
+
+  function paint(){
+    var chart = echarts.init(el, null, { renderer:'canvas' });
+    chart.setOption({
+      animationDuration: 1000,
+      animationEasing: 'cubicOut',
+      silent: true,
+      radar: {
+        center: ['50%','52%'],
+        radius: '61%',
+        splitNumber: 4,
+        shape: 'polygon',
+        indicator: dims.map(function(x){ return { name:x.short, max:100 }; }),
+        axisName: {
+          color:'#33433D',
+          fontSize:11.5,
+          fontFamily:'"Noto Sans SC","PingFang SC",sans-serif',
+          lineHeight:16
+        },
+        nameGap: 10,
+        splitLine: { lineStyle:{ color:'#E3E6E0', width:1 } },
+        splitArea: { areaStyle:{ color:['rgba(44,106,88,0.05)','rgba(250,250,248,0)'] } },
+        axisLine: { lineStyle:{ color:'#E3E6E0' } }
+      },
+      series: [{
+        type:'radar',
+        symbol:'circle',
+        symbolSize:4.5,
+        lineStyle:{ color:'#2C6A58', width:1.4 },
+        itemStyle:{ color:'#2C6A58', borderColor:'#2C6A58' },
+        areaStyle:{ color:'rgba(44,106,88,0.10)' },
+        data:[{ value: dims.map(function(x){ return x.pct; }) }]
+      }]
+    });
+    window.addEventListener('resize', function(){ chart.resize(); });
+  }
+}
+
+})();
+</script>
+</body>
+</html>
